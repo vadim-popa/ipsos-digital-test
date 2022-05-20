@@ -1,8 +1,8 @@
 <template>
-  <div class="home">
+  <section>
     <h1>Home view</h1>
     <home-list />
-  </div>
+  </section>
 </template>
 
 <script>
