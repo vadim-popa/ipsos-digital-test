@@ -1,22 +1,26 @@
 <template>
   <section>
-    isBigScreen: {{ isBigScreen }}
-    <span v-if="isBigScreen">
+    <span
+      v-if="isBigScreen"
+      key="column-grid"
+    >
       <TwoColumnsGrid
-        :first-list-data-props="firstHalf"
-        :secound-list-data-props="secondHalf"
+        :first-list-data-props="listDataFirstHalf"
+        :second-list-data-props="listDataSecondHalf"
       />
     </span>
-    <span v-else>
+    <span
+      v-else
+      key="column-grid"
+    >
       <OneColumnGrid :list-data-props="listData"/>
     </span>
   </section>
-
 </template>
 
 <script>
-import OneColumnGrid from './OneColumnGrid.vue';
-import TwoColumnsGrid from './TwoColumnsGrid.vue';
+import OneColumnGrid from '@/components/HomeComponents/OneColumnGrid.vue';
+import TwoColumnsGrid from '@/components/HomeComponents/TwoColumnsGrid.vue';
 
 export default {
   name: 'HomeList',
@@ -26,56 +30,29 @@ export default {
   },
   data() {
     return {
-      // firstHalf: [],
-      // secondHalf: [],
+      requiredScreenSize: 720,
     };
   },
   computed: {
     listData() {
       return this.$store.state.listModule.listData;
     },
-    dummyListData() {
-      return JSON.parse(JSON.stringify(this.listData));
+    listDataFirstHalf() {
+      return this.$store.state.listModule.listDataFirstHalf;
+    },
+    listDataSecondHalf() {
+      return this.$store.state.listModule.listDataSecondHalf;
     },
     isBigScreen() {
-      return window.screen.width > 720;
-    },
-    middleIndex() {
-      // const dummy = JSON.parse(JSON.stringify(this.listData));
-      return Math.ceil(this.dummyListData.length / 2);
-    },
-  /*
-    firstHalf() {
-      return this.dummyListData.splice(0, this.middleIndex);
-    },
-    secondHalf() {
-      return this.dummyListData.splice(-this.middleIndex);
-    },
-    */
-  },
-  /*
-  watch: {
-    listData(value) {
-      if (value) {
-        this.divideListData();
-      }
+      return window.screen.width > this.requiredScreenSize;
     },
   },
-  */
   mounted() {
     this.fetchList();
-    console.log('window.innerWidth: ', window.innerWidth);
-    console.log('window.screen.width: ', window.screen.width);
   },
   methods: {
     fetchList() {
       this.$store.dispatch('listModule/FETCH_LIST_DATA');
-    },
-    divideListData() {
-      const dummy = JSON.parse(JSON.stringify(this.listData));
-      const middleIndex = Math.ceil(dummy.length / 2);
-      this.firstHalf = dummy.splice(0, middleIndex);
-      this.secondHalf = dummy.splice(-middleIndex);
     },
   },
 };

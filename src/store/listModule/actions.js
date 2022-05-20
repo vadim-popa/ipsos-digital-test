@@ -10,6 +10,7 @@ export function FETCH_LIST_DATA(context) {
     axios(config)
       .then((response) => {
         context.commit('SET_LIST_DATA', response?.data);
+        context.commit('SPLIT_LIST_DATA', response?.data);
         return resolve(context.state.listData);
       })
       .catch((error) => reject(error));

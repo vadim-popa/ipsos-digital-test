@@ -1,11 +1,9 @@
 <template>
-    <section>
-      <ul>
-        <li v-for="listItem in itemsProps" :key="listItem.id">
-          {{ listItem.title }}
-        </li>
-      </ul>
-    </section>
+  <ul class="striped-list">
+    <li v-for="listItem in itemsProps" :key="listItem.id">
+      {{ listItem.title }}
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -20,6 +18,6 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  @import "src/assets/style/listComponent";
 </style>
