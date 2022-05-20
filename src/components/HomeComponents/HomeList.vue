@@ -1,57 +1,67 @@
 <template>
   <section>
     isBigScreen: {{ isBigScreen }}
-    <div class="row">
-      <div class="column" style="background-color:#aaa;">
-        <h2>Column 1</h2>
-        <p>Some text..</p>
-      </div>
-      <!--
-      <div class="column" style="background-color:#bbb;">
-        <h2>Column 2</h2>
-        <p>Some text..</p>
-      </div>
-      -->
-    </div>
-    <div v-if="isBigScreen">
-      <ul>
-        <li v-for="listItem in listData" :key="listItem.id">
-          {{ listItem.title }}
-        </li>
-      </ul>
-    </div>
-    <pre>
-      {{ listData }}
-    </pre>
+    <span v-if="isBigScreen">
+      <TwoColumnsGrid
+        :first-list-data-props="firstHalf"
+        :secound-list-data-props="secondHalf"
+      />
+    </span>
+    <span v-else>
+      <OneColumnGrid :list-data-props="listData"/>
+    </span>
   </section>
 
 </template>
 
 <script>
+import OneColumnGrid from './OneColumnGrid.vue';
+import TwoColumnsGrid from './TwoColumnsGrid.vue';
+
 export default {
   name: 'HomeList',
+  components: {
+    OneColumnGrid,
+    TwoColumnsGrid,
+  },
   data() {
     return {
-      firstHalf: [],
-      secondHalf: [],
+      // firstHalf: [],
+      // secondHalf: [],
     };
   },
   computed: {
     listData() {
       return this.$store.state.listModule.listData;
     },
+    dummyListData() {
+      return JSON.parse(JSON.stringify(this.listData));
+    },
     isBigScreen() {
       return window.screen.width > 720;
     },
-  },
-  watch: {
-    /*
-    listData(value) {
-      if (!value) return false;
-      // this.divideListData();
-    }
+    middleIndex() {
+      // const dummy = JSON.parse(JSON.stringify(this.listData));
+      return Math.ceil(this.dummyListData.length / 2);
+    },
+  /*
+    firstHalf() {
+      return this.dummyListData.splice(0, this.middleIndex);
+    },
+    secondHalf() {
+      return this.dummyListData.splice(-this.middleIndex);
+    },
     */
   },
+  /*
+  watch: {
+    listData(value) {
+      if (value) {
+        this.divideListData();
+      }
+    },
+  },
+  */
   mounted() {
     this.fetchList();
     console.log('window.innerWidth: ', window.innerWidth);
@@ -61,34 +71,16 @@ export default {
     fetchList() {
       this.$store.dispatch('listModule/FETCH_LIST_DATA');
     },
-    /*
     divideListData() {
-      if (this.isBigScreen) {
-        return false;
-      }
+      const dummy = JSON.parse(JSON.stringify(this.listData));
+      const middleIndex = Math.ceil(dummy.length / 2);
+      this.firstHalf = dummy.splice(0, middleIndex);
+      this.secondHalf = dummy.splice(-middleIndex);
     },
-    */
   },
 };
 </script>
 
 <style scoped>
-  * {
-    box-sizing: border-box;
-  }
 
-  /* Create two equal columns that floats next to each other */
-  .column {
-    float: left;
-    width: 50%;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
-  }
-
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
 </style>
